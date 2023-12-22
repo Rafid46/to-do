@@ -22,19 +22,19 @@ const Register = () => {
       const loggedUser = result.user;
       updateUserProfile(data.name, data.photoURL).then(() => {
         // console.log("user profile updated");
-        const userInfo = {
-          name: data.name,
-          email: data.email,
-          photoURL: data.photoURL,
-          role: "user",
-        };
-        axiosPublic.post("/users", userInfo).then((res) => {
-          if (res.data.insertedId) {
-            console.log("user added");
-            reset();
-            navigate("/");
-          }
-        });
+        // const userInfo = {
+        //   name: data.name,
+        //   email: data.email,
+        //   photoURL: data.photoURL,
+        //   role: "user",
+        // };
+        // axiosPublic.post("/users", userInfo).then((res) => {
+        //   if (res.data.insertedId) {
+        //     console.log("user added");
+        //     reset();
+        //     navigate("/");
+        //   }
+        // });
       });
       console.log(loggedUser);
     });

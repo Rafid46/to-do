@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
+
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const handleLogOut = () => {
@@ -19,7 +20,7 @@ const Navbar = () => {
             <NavLink
               to="/"
               className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "" : ""
+                isPending ? "pending" : isActive ? "text-gray-800" : ""
               }
             >
               Home
@@ -29,7 +30,11 @@ const Navbar = () => {
             <NavLink
               to="dashboard"
               className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "" : ""
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "text-gray-800 border-b-2 border-blue-500"
+                  : ""
               }
             >
               Dashboard
@@ -37,9 +42,13 @@ const Navbar = () => {
           </li>
           <li className="text-xl mr-10 font-semibold text-blue-400">
             <NavLink
-              to="/"
+              to="/notification"
               className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "" : ""
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "text-gray-800 border-b-2 border-blue-500"
+                  : ""
               }
             >
               notification
@@ -49,7 +58,11 @@ const Navbar = () => {
             <NavLink
               to="/register"
               className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "" : ""
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "text-gray-800 border-b-2 border-blue-500"
+                  : ""
               }
             >
               Register

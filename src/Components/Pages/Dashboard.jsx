@@ -1,16 +1,16 @@
-import { useState } from "react";
 import CreateTasks from "./Createtasks";
 import ListTasks from "./ListTasks";
-
+import ShowTasks from "./ShowTasks";
 const Dashboard = () => {
-  const [tasks, setTasks] = useState([]);
   return (
-    <div>
-      <div className="bg-slate-400 w-fit p-5 max-w-screen-xl mx-auto">
-        <CreateTasks tasks={tasks} setTasks={setTasks}></CreateTasks>
-      </div>
-      <div>
-        <ListTasks tasks={tasks} setTasks={setTasks}></ListTasks>
+    <div className="max-w-screen-xl mx-auto">
+      <div className="flex items-center justify-evenly">
+        <div className="border-2 p-5 rounded-md mr-7">
+          <CreateTasks></CreateTasks>
+        </div>
+        <div>
+          <ShowTasks></ShowTasks>
+        </div>
       </div>
     </div>
   );

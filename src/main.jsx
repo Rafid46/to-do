@@ -8,7 +8,13 @@ import Register from "./Components/Users/Register";
 import AuthProvider from "./Components/Provider/AuthProvider";
 import Login from "./Components/Users/Login";
 import Dashboard from "./Components/Pages/Dashboard";
-
+import PrivateRoute from "./Components/Routes/PrivateRoute";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,7 +23,14 @@ const router = createBrowserRouter([
       { path: "/", element: <Home></Home> },
       { path: "register", element: <Register></Register> },
       { path: "login", element: <Login></Login> },
-      { path: "dashboard", element: <Dashboard></Dashboard> },
+      {
+        path: "dashboard",
+        element: (
+          <PrivateRoute>
+            <Dashboard></Dashboard>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);
@@ -25,9 +38,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <div className="font-poppins">
-        <RouterProvider router={router} />
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="font-poppins">
+          <RouterProvider router={router} />
+        </div>
+      </QueryClientProvider>
     </AuthProvider>
   </React.StrictMode>
 );

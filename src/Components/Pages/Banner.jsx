@@ -16,7 +16,7 @@ const Banner = () => {
             </span>
             <br />
             {/* button */}
-            <Link to="/login">
+            <Link to="/dashboard">
               <button className="learn-more batton mt-5">
                 <span className="circle" aria-hidden="true">
                   <span className="icon arrow"></span>

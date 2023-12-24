@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
-
+import { IoMdLogOut } from "react-icons/io";
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const handleLogOut = () => {
@@ -42,7 +42,7 @@ const Navbar = () => {
           </li>
           <li className="text-xl mr-10 font-semibold text-blue-400">
             <NavLink
-              to="/notification"
+              to=""
               className={({ isActive, isPending }) =>
                 isPending
                   ? "pending"
@@ -56,7 +56,7 @@ const Navbar = () => {
           </li>
           <li className="text-xl mr-10 font-semibold text-blue-400">
             <NavLink
-              to="/register"
+              to="/login"
               className={({ isActive, isPending }) =>
                 isPending
                   ? "pending"
@@ -65,7 +65,7 @@ const Navbar = () => {
                   : ""
               }
             >
-              Register
+              Login
             </NavLink>
           </li>
         </nav>
@@ -116,10 +116,10 @@ const Navbar = () => {
                 <div className="dropdown dropdown-end">
                   <summary tabIndex={0} className="btn btn-ghost rounded-btn">
                     <div className="avatar">
-                      <div className="w-8 rounded-full">
+                      <div className="rounded-full w-[40px] h-[40px]">
                         {user?.photoURL ? (
                           <img
-                            className="object-cover w-8 h-8 rounded-full"
+                            className=" rounded-full border-2 border-black"
                             src={user?.photoURL}
                           />
                         ) : (
@@ -135,16 +135,18 @@ const Navbar = () => {
                     className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
                   >
                     <li>
-                      <a className="cursor-not-allowed">{user?.displayName}</a>
+                      <a className="cursor-none font-bold">
+                        {user?.displayName}
+                      </a>
                     </li>
                     <Link>
-                      <li>
-                        <button onClick={handleLogOut}>Logout</button>
+                      <li className="flex justify-between">
+                        <button onClick={handleLogOut}>
+                          Logout
+                          <IoMdLogOut className="text-black ml-20" />
+                        </button>
                       </li>
                     </Link>
-                    <li>
-                      {/* <button onClick={handleLogOut}>Logout</button> */}
-                    </li>
                   </ul>
                 </div>
               </>

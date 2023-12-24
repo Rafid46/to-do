@@ -1,86 +1,73 @@
-/* eslint-disable react/jsx-key */
-import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../Hooks/useAxiosPublic";
-import Swal from "sweetalert2";
-import { useContext } from "react";
-import { AuthContext } from "../Provider/AuthProvider";
+/* eslint-disable no-unused-vars */
 
-const ShowTasks = () => {
+import useTanQuery from "../Hooks/useTanQuery";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import MainShowtask from "./MainShowtask";
+import { useDrop } from "react-dnd";
+import { toast } from "react-toastify";
+import ani from "../../assets/animation/todo.json";
+import ani2 from "../../assets/animation/ongoing.json";
+import ani3 from "../../assets/animation/completed.json";
+import Lottie from "lottie-react";
+// eslint-disable-next-line react/prop-types
+const ShowTasks = ({ status }) => {
   const axiosPublic = useAxiosPublic();
-  const { user } = useContext(AuthContext);
-  const { data: tasks = [], refetch } = useQuery({
-    queryKey: ["tasks", user?.email],
-    queryFn: async () => {
-      const res = await axiosPublic.get(`/todo/tasks?email=${user?.email}`);
-      return res.data;
-    },
-  });
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic.delete(`/todo/tasks${id}`).then((res) => {
-          console.log(res.data);
-          refetch();
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your task has been deleted",
-            icon: "success",
-          });
-        });
-      }
+  const { tasks, refetch } = useTanQuery();
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: "task",
+    drop: (item) => addItemToSection(item.id),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
+  const addItemToSection = (id) => {
+    axiosPublic.patch(`/todo/tasks/patch/${id}`, { status }).then((res) => {
+      refetch();
+      toast.success("Updated");
     });
   };
-
+  console.log(tasks);
+  const toDo = tasks.filter((task) => task.status === status);
+  console.log(toDo);
   return (
-    <div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 gap-5">
-        <div className="grid grid-cols-1 gap-2">
-          <div className="border-2 p-5 px-5 pr-1 rounded-md">
-            <p className="text-4xl font-semibold mb-5">TO-DO</p>
-            {tasks.map((task) => (
-              <div key={task._id} className="border-2 p-5 mr-5 rounded-md">
-                <p className="mt-1 p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm">
-                  <span className="font-bold">Task Name:</span> {task.name}
-                </p>
-
-                <p className="mt-1 p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm">
-                  {" "}
-                  <span className="font-bold">Description:</span>{" "}
-                  {task.description}
-                </p>
-
-                <p className="mt-1  p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm">
-                  <span className="font-bold">Priority:</span> {task.priority}
-                </p>
-
-                <p className="mt-1 p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm">
-                  <span className="font-bold"> Deadline: </span>
-                  {task.deadline}
-                </p>
-                <button
-                  onClick={() => handleDelete(task._id)}
-                  className="btn mt-2"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-          </div>
+    <div ref={drop} className={`${isOver ? "" : ""} max-w-screen-xl mx-auto`}>
+      <div className="w-[430px] gap-5 border-2 border-gray-400 rounded-md p-2">
+        <div className="flex items-center justify-evenly mb-5">
+          <h1
+            className={`text-3xl text-center font-bold my-2 ${
+              status === "Ongoing"
+                ? "text-pink-700"
+                : status === "Complete"
+                ? "text-teal-500"
+                : ""
+            }`}
+          >
+            {status}
+          </h1>
+          {/* lottie animation */}
+          {status === "Todo" ? (
+            <div className="w-[100px]">
+              <Lottie animationData={ani} loop={true}></Lottie>
+            </div>
+          ) : status === "Ongoing" ? (
+            <div className="w-[100px]">
+              <Lottie animationData={ani2} loop={true}></Lottie>
+            </div>
+          ) : (
+            <div className="w-[70px]">
+              <Lottie animationData={ani3} loop={true}></Lottie>
+            </div>
+          )}
         </div>
-        <div className="border-2 p-5 rounded-md">
-          <p className="text-4xl font-semibold mb-5 text-blue-400">Ongoing</p>
-        </div>
-        <div className="border-2  p-5 rounded-md">
-          <p className="text-4xl font-semibold text-teal-600">Completed</p>
-        </div>
+        {toDo.map((task, index) => (
+          <MainShowtask
+            key={index}
+            task={task}
+            refetch={refetch}
+            status={status}
+          ></MainShowtask>
+        ))}
       </div>
     </div>
   );

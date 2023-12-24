@@ -4,11 +4,12 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 const CreateTasks = () => {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm();
   const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
   const { refetch } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
@@ -17,7 +18,6 @@ const CreateTasks = () => {
     },
   });
   const onSubmit = (data) => {
-    onAddTask(data);
     console.log(data);
     const taskData = {
       email: user?.email,
@@ -25,22 +25,22 @@ const CreateTasks = () => {
       description: data.description,
       priority: data.priority,
       deadline: data.deadline,
-      status: "todo",
+      status: "Todo",
     };
     axiosPublic.post("/todo/tasks", taskData).then((res) => {
       console.log(res.data, "task added");
       reset(), Swal.fire("task added");
-      refetch();
+      queryClient.invalidateQueries(["tasks"]);
     });
   };
 
   return (
     <div>
       <div>
-        <p className="text-4xl text-center text-gray-600 mb-5">Create task</p>
+        <p className="text-4xl text-start text-white mb-5">Create task</p>
         <form onSubmit={handleSubmit(onSubmit)} className="">
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white">
               Tasks title
             </label>
             <input
@@ -51,7 +51,7 @@ const CreateTasks = () => {
               type="text"
               className="mt-1 w-60 p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            <label className="block text-sm font-medium text-gray-700 mt-5">
+            <label className="block text-sm font-medium text-white mt-5">
               Description
             </label>
             <input
@@ -63,18 +63,18 @@ const CreateTasks = () => {
               className="mt-1 w-60 p-4 py-2 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
           </div>
-          <label className="block text-sm font-medium text-gray-700 mt-2 mb-2">
+          <label className="block text-sm font-medium text-white mt-2 mb-2">
             Priority
           </label>
           <select
             {...register("priority")}
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered w-60 max-w-xs"
           >
             <option className="text-blue-400">Low</option>
             <option className="text-green-400">Moderate</option>
             <option className="text-orange-400">High</option>
           </select>
-          <label className="block text-sm font-medium text-gray-700 mt-5 mb-2">
+          <label className="block text-sm font-medium text-white mt-5 mb-2">
             Deadline
           </label>
           <input
@@ -88,7 +88,7 @@ const CreateTasks = () => {
           <br />
           <button
             type="submit"
-            className="inline-block shrink-0 rounded-md border  bg-blue-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+            className="inline-block shrink-0 rounded-md  bg-teal-700 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-blue-500"
           >
             Create
           </button>

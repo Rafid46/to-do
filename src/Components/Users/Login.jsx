@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+import swal from "sweetalert";
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,26 +19,30 @@ const Login = () => {
     const password = form.password.value;
     // console.log(email, password);
     // console.log(form);
-    signIn(email, password).then((result) => {
-      const user = result.user;
-      // console.log(user);
-      Swal("Good job!", "logged in successfully", "success");
-      navigate(from, { replace: true });
-      //   navigate(from, { replace: true });
-    });
+    signIn(email, password)
+      .then((result) => {
+        // console.log(user);
+        navigate(from, { replace: true });
+        swal("Good job!", "logged in successfully", "success");
+      })
+      .catch((error) => {
+        console.error(error);
+        swal("incorrect password or email");
+      });
   };
   const handleGoogleSignIn = () => {
     googleSignIn().then((result) => {
       console.log(result.user);
+      navigate("/dashboard");
       //   navigate(from, { replace: true });
-      const userInfo = {
-        email: result.user?.email,
-        name: result.user?.displayName,
-      };
-      axiosPublic.post("/users", userInfo).then((res) => {
-        console.log(res.data);
-        navigate("/");
-      });
+      // const userInfo = {
+      //   email: result.user?.email,
+      //   name: result.user?.displayName,
+      // };
+      // axiosPublic.post("/users", userInfo).then((res) => {
+      //   console.log(res.data);
+      //   navigate("/dashboard");
+      // });
       //   swal("Good job!", "logged in successfully", "success");
     });
   };

@@ -9,11 +9,12 @@ import AuthProvider from "./Components/Provider/AuthProvider";
 import Login from "./Components/Users/Login";
 import Dashboard from "./Components/Pages/Dashboard";
 import PrivateRoute from "./Components/Routes/PrivateRoute";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ShowTasks from "./Components/Pages/ShowTasks";
+import Heading from "./Components/Pages/Heading";
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -21,28 +22,33 @@ const router = createBrowserRouter([
     element: <MainLayout></MainLayout>,
     children: [
       { path: "/", element: <Home></Home> },
-      { path: "register", element: <Register></Register> },
-      { path: "login", element: <Login></Login> },
+      { path: "/register", element: <Register></Register> },
+      { path: "/login", element: <Login></Login> },
+      // { path: "showTask", element: <ShowTasks></ShowTasks> },
+      // { path: "todo", element: <Heading></Heading> },
       {
-        path: "dashboard",
+        path: "/dashboard",
         element: (
           <PrivateRoute>
             <Dashboard></Dashboard>
           </PrivateRoute>
         ),
+        children: [],
       },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <div className="font-poppins">
-          <RouterProvider router={router} />
-        </div>
-      </QueryClientProvider>
-    </AuthProvider>
-  </React.StrictMode>
+  <DndProvider backend={HTML5Backend}>
+    <React.StrictMode>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <div className="font-poppins">
+            <RouterProvider router={router} />
+          </div>
+        </QueryClientProvider>
+      </AuthProvider>
+    </React.StrictMode>
+  </DndProvider>
 );

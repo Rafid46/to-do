@@ -4,12 +4,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import banner from "../../assets/images/banner.jpg";
 import Swal from "sweetalert2";
 import swal from "sweetalert";
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPublic = useAxiosPublic();
+  const { user } = useContext(AuthContext);
+  console.log(user?.displayName);
   const from = location.state?.from?.pathname || "/";
   const { signIn, googleSignIn } = useContext(AuthContext);
   const handleLogin = (e) => {
@@ -19,21 +22,23 @@ const Login = () => {
     const password = form.password.value;
     // console.log(email, password);
     // console.log(form);
-    signIn(email, password)
-      .then((result) => {
-        // console.log(user);
-        navigate(from, { replace: true });
-        swal("Good job!", "logged in successfully", "success");
-      })
-      .catch((error) => {
-        console.error(error);
-        swal("incorrect password or email");
-      });
+    signIn(email, password).then((result) => {
+      // const displayName = result.user?.displayName || "User";
+      // console.log(user);
+      swal("Welcome", "Logged in successfully", "success");
+      navigate(from, { replace: true });
+    });
+    // .catch((error) => {
+    //   console.error(error);
+    //   swal("incorrect password or email");
+    // });
   };
   const handleGoogleSignIn = () => {
     googleSignIn().then((result) => {
-      console.log(result.user);
+      // console.log(result.user);
+      // const displayName = result.user?.displayName || "User";
       navigate("/dashboard");
+      swal("Welcome", "Logged in successfully", "success");
       //   navigate(from, { replace: true });
       // const userInfo = {
       //   email: result.user?.email,
@@ -47,7 +52,7 @@ const Login = () => {
     });
   };
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center bg-cover bg-center">
       <section className="max-w-screen-xl mx-auto">
         <div className="flex items-center justify-center">
           <p className="text-center text-5xl font-bold mr-5 mb-10">Login</p>
@@ -61,12 +66,11 @@ const Login = () => {
                 <div className="mb-5">
                   <label className="block text-sm font-medium text-gray-700">
                     Email
-                  </label>
-
+                  </label>{" "}
                   <input
                     type="email"
                     name="email"
-                    className="mt-1 w-60 p-5 py-3 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                    className="mt-1 w-60 p-5 py-3 border-2 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                 </div>
 
@@ -78,7 +82,7 @@ const Login = () => {
                   <input
                     type="password"
                     name="password"
-                    className="mt-1 p-5 py-3 w-60 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                    className="mt-1 border-2 p-5 py-3 w-60 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                 </div>
 

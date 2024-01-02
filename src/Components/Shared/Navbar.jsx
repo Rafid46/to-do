@@ -3,6 +3,8 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import { IoMdLogOut } from "react-icons/io";
+import anim from "../../assets/animation/Animation - 1703521358059.json";
+import Lottie from "lottie-react";
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const handleLogOut = () => {
@@ -30,17 +32,13 @@ const Navbar = () => {
             <NavLink
               to="dashboard"
               className={({ isActive, isPending }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? "text-gray-800 border-b-2 border-blue-500"
-                  : ""
+                isPending ? "pending" : isActive ? "text-gray-100" : ""
               }
             >
               Dashboard
             </NavLink>
           </li>
-          <li className="text-xl mr-10 font-semibold text-blue-400">
+          {/* <li className="text-xl mr-10 font-semibold text-blue-400">
             <NavLink
               to=""
               className={({ isActive, isPending }) =>
@@ -53,16 +51,12 @@ const Navbar = () => {
             >
               notification
             </NavLink>
-          </li>
-          <li className="text-xl mr-10 font-semibold text-blue-400">
+          </li> */}
+          <li className="text-xl font-semibold text-blue-400">
             <NavLink
               to="/login"
               className={({ isActive, isPending }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? "text-gray-800 border-b-2 border-blue-500"
-                  : ""
+                isPending ? "pending" : isActive ? "text-gray-800" : ""
               }
             >
               Login
@@ -75,7 +69,7 @@ const Navbar = () => {
   return (
     <div>
       <div>
-        <div className="navbar bg-base-100">
+        <div className="navbar">
           <div className="navbar-start">
             <div className="dropdown">
               <div
@@ -105,10 +99,12 @@ const Navbar = () => {
                 {links}
               </ul>
             </div>
-            <a className="text-xl font-semibold"></a>
+            <div className="w-[100px]">
+              <Lottie animationData={anim} loop={true}></Lottie>
+            </div>
           </div>
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1">{links}</ul>
+            <ul className="menu menu-horizontal py-1">{links}</ul>
           </div>
           <div className="navbar-end text-3xl">
             {user ? (

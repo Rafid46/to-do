@@ -89,3 +89,9 @@
 .batton:hover .button-text {
   color: rgb(102, 174, 250);
 }
+.picture {
+  background-image: url("../src/assets/images/banner.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

@@ -45,14 +45,16 @@ const MainShowtask = ({ task, refetch }) => {
     });
   };
   //   update
-  const handleSubmit = (id) => {
+  const handleUpdate = (id) => {
     axiosPublic.patch(`/todo/tasks/update/${id}`, inputValue).then((res) => {
       console.log(res.data);
       refetch();
       Swal.fire({
-        title: "Updated",
-        text: "Your task has been updated",
+        position: "bottom-end",
         icon: "success",
+        title: "task name has been updated",
+        showConfirmButton: false,
+        timer: 1500,
       });
     });
     setEditing(false);
@@ -60,33 +62,33 @@ const MainShowtask = ({ task, refetch }) => {
   return (
     <div
       ref={(node) => dragPreview(drag(node))}
-      className={`rounded-md bg-transparent m-5 border-2 border-gray-300 p-5 pt-5 pb-0 ${
+      className={`rounded-md bg-transparent m-5 border-2 border-gray-300 p-5 pt-5 pb-0${
         isDragging ? "opacity-100" : "opacity-100"
       } cursor-move`}
     >
       <div className="mb-8">
-        <h3 className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-700 shadow-sm">
-          <span className="font-bold">Name: </span>
+        <h3 className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-100 shadow-sm">
+          <span className="font-bold">Name : </span>
           {editing ? (
             <input
               onChange={(e) =>
                 setInputValue({ ...inputValue, name: e.target.value })
               }
               autoFocus={true}
-              className="cursor-pointer"
+              className="cursor-pointer p-1 bg-transparent"
               type="text"
               value={inputValue.name}
             />
           ) : (
-            <span>{task.name}</span>
+            <span className="">{task.name}</span>
           )}
         </h3>
-        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-700 shadow-sm">
-          <span className="font-bold">Description:</span>{" "}
+        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-100 shadow-sm">
+          <span className="font-bold">Description :</span>{" "}
           <div className="flex items-center">
             {editing ? (
               <textarea
-                className="textarea w-full cursor-pointer border-black mt-2"
+                className="textarea w-full cursor-pointer border-black mt-2 text-black"
                 type="text"
                 value={inputValue.description}
                 placeholder="Bio"
@@ -99,14 +101,14 @@ const MainShowtask = ({ task, refetch }) => {
             )}
           </div>
         </p>
-        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-700 shadow-sm">
-          <span className="font-bold">DeadLine:</span>{" "}
+        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-100 shadow-sm">
+          <span className="font-bold">DeadLine :</span>{" "}
           {editing ? (
             <input
               onChange={(e) =>
                 setInputValue({ ...inputValue, deadline: e.target.value })
               }
-              className="cursor-pointer"
+              className="cursor-pointer bg-transparent"
               type="date"
               value={inputValue.deadline}
             />
@@ -114,8 +116,8 @@ const MainShowtask = ({ task, refetch }) => {
             <span>{task.deadline}</span>
           )}
         </p>
-        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-700 shadow-sm">
-          <span className="font-bold">Priority:</span>{" "}
+        <p className="mt-1 mb-4 p-4 py-2 border-2 rounded-md border-gray-200 text-sm text-gray-100 shadow-sm">
+          <span className="font-bold">Priority :</span>{" "}
           {editing ? (
             <select
               onChange={(e) =>
@@ -123,7 +125,7 @@ const MainShowtask = ({ task, refetch }) => {
               }
               type="text"
               value={inputValue.priority}
-              className="select select-bordered w-60 max-w-xs cursor-pointer"
+              className="select select-bordered w-60 max-w-xs cursor-pointer text-black"
             >
               <option className="text-blue-400">Low</option>
               <option className="text-green-400">Moderate</option>
@@ -133,10 +135,10 @@ const MainShowtask = ({ task, refetch }) => {
             <span
               className={`${
                 task.priority === "Low"
-                  ? "text-blue-600"
+                  ? "text-blue-600 font-bold"
                   : task.priority === "Moderate"
-                  ? "text-green-400"
-                  : "text-red-600"
+                  ? "text-green-400 font-bold"
+                  : "text-red-600 font-bold"
               }`}
             >
               {task.priority}
@@ -149,17 +151,14 @@ const MainShowtask = ({ task, refetch }) => {
           <div>
             <button
               type="submit"
-              onClick={() => handleSubmit(task._id)}
-              className="btn text-teal-500 mr-1"
+              onClick={() => handleUpdate(task._id)}
+              className="btn border-2 bg-transparent text-teal-400 mr-1"
             >
               Update
               <GoUpload className="" />
             </button>
             {editing && (
-              <button
-                onClick={() => setEditing(false)}
-                className="btn text-pink-700 mr-1"
-              >
+              <button onClick={() => setEditing(false)} className="btn  mr-1">
                 cancel
                 <MdOutlineCancel className="" />
               </button>
@@ -169,16 +168,19 @@ const MainShowtask = ({ task, refetch }) => {
           <div>
             <button
               onClick={() => setEditing(true)}
-              className="btn text-teal-500 mr-1"
+              className="btn text-teal-400 mr-1 border-2 bg-transparent border-gray-100"
             >
               Edit
               <CiEdit className="" />
             </button>
           </div>
         )}
-        <button onClick={() => handleDelete(task._id)} className="btn mr-1">
+        <button
+          onClick={() => handleDelete(task._id)}
+          className="btn mr-1 text-pink-700"
+        >
           Delete
-          <MdOutlineDeleteOutline className="" />
+          <MdOutlineDeleteOutline className="text-pink-700" />
         </button>
       </div>
     </div>
